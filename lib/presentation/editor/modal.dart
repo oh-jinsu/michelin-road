@@ -7,10 +7,8 @@ import 'package:michelin_road/application/events/form_rating_changed.dart';
 import 'package:michelin_road/application/events/form_submitted.dart';
 import 'package:michelin_road/application/events/form_title_changed.dart';
 import 'package:michelin_road/application/models/form.dart';
-import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/stores/form.dart';
 import 'package:michelin_road/application/stores/form_location.dart';
-import 'package:michelin_road/core/enum.dart';
 import 'package:michelin_road/presentation/editor/widgets/star_rating.dart';
 
 class EditorModal extends Component {

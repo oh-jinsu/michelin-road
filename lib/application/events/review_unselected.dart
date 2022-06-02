@@ -1,0 +1,3 @@
+class ReviewUnselected {
+  const ReviewUnselected();
+}

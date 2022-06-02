@@ -2,6 +2,7 @@ import 'package:codux/codux.dart';
 import 'package:michelin_road/application/events/form_pending.dart';
 import 'package:michelin_road/application/events/form_submitted.dart';
 import 'package:michelin_road/application/events/review_added.dart';
+import 'package:michelin_road/application/events/review_selected.dart';
 import 'package:michelin_road/core/service_locator.dart';
 import 'package:michelin_road/infrastructure/repositories/review.dart';
 
@@ -21,6 +22,8 @@ class SubmitFormEffect extends Effect {
       );
 
       dispatch(ReviewAdded(model));
+
+      dispatch(ReviewSelected(model));
     });
   }
 }

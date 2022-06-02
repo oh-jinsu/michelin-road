@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class StarRating extends StatefulWidget {
   final bool enabled;
   final void Function(int)? onChanged;
+  final double size;
+  final int initial;
 
   const StarRating({
     Key? key,
     this.enabled = true,
     this.onChanged,
+    this.size = 36.0,
+    this.initial = 5,
   }) : super(key: key);
 
   @override
@@ -15,7 +19,7 @@ class StarRating extends StatefulWidget {
 }
 
 class _StarRatingState extends State<StarRating> {
-  int _rating = 5;
+  late int _rating = widget.initial;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class _StarRatingState extends State<StarRating> {
             onTap: () => _onTap(i),
             child: Icon(
               Icons.star_rounded,
-              size: 36.0,
+              size: widget.size,
               color: i < _rating ? Colors.amber : Colors.grey[400],
             ),
           ),

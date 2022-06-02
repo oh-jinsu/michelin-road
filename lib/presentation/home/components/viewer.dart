@@ -2,6 +2,8 @@ import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:michelin_road/application/events/camera_moved.dart';
+import 'package:michelin_road/application/events/review_selected.dart';
+import 'package:michelin_road/application/events/review_unselected.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/models/review.dart';
 import 'package:michelin_road/application/stores/first_location.dart';
@@ -22,9 +24,10 @@ class Viewer extends Component {
           final reviews = snapshot.data as List<ReviewModel>;
 
           final markers = reviews.map(
-            (e) => Marker(
-              markerId: MarkerId(e.id),
-              position: LatLng(e.latitude, e.longitude),
+            (review) => Marker(
+              markerId: MarkerId(review.id),
+              position: LatLng(review.latitude, review.longitude),
+              onTap: () => dispatch(ReviewSelected(review)),
             ),
           );
 
@@ -56,6 +59,7 @@ class Viewer extends Component {
                       longitude: position.longitude,
                     ),
                   ),
+                  onTap: (position) => dispatch(const ReviewUnselected()),
                 );
               }
               return Container();

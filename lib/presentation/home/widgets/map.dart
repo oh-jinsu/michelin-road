@@ -7,6 +7,7 @@ class HomeMap extends StatefulWidget {
   final LatLng? initial;
   final LatLng? current;
   final Iterable<Marker> markers;
+  final void Function(LatLng position)? onTap;
   final void Function(LatLng position)? onCurrentMoved;
 
   const HomeMap(
@@ -14,6 +15,7 @@ class HomeMap extends StatefulWidget {
       required this.initial,
       required this.current,
       this.markers = const [],
+      this.onTap,
       this.onCurrentMoved})
       : super(key: key);
 
@@ -91,6 +93,7 @@ class _HomeMapState extends State<HomeMap> {
       onCameraMove: (position) {
         _zoom = position.zoom;
       },
+      onTap: widget.onTap,
     );
   }
 }
