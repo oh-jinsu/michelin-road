@@ -6,11 +6,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class HomeMap extends StatefulWidget {
   final LatLng? initial;
   final LatLng? current;
+  final Iterable<Marker> markers;
 
   const HomeMap({
     Key? key,
     required this.initial,
     required this.current,
+    this.markers = const [],
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class HomeMap extends StatefulWidget {
 }
 
 class _HomeMapState extends State<HomeMap> {
-  static const _zoom = 17.0;
+  static const _zoom = 16.0;
 
   final _controller = Completer<GoogleMapController>();
 
@@ -81,7 +83,7 @@ class _HomeMapState extends State<HomeMap> {
       ),
       myLocationButtonEnabled: false,
       onMapCreated: (controller) => _controller.complete(controller),
-      markers: markers,
+      markers: {...widget.markers, ...markers},
     );
   }
 }

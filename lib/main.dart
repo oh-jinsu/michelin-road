@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:codux/codux.dart';
 import 'package:michelin_road/application/effects/app_waiter.dart';
 import 'package:michelin_road/application/effects/environment.dart';
+import 'package:michelin_road/application/effects/fetch_reviews.dart';
 import 'package:michelin_road/application/effects/infrastructure.dart';
 import 'package:michelin_road/application/effects/locate.dart';
 import 'package:michelin_road/application/events/app_started.dart';
 import 'package:michelin_road/application/stores/first_location.dart';
 import 'package:michelin_road/application/stores/current_location.dart';
 import 'package:michelin_road/application/stores/locator_status.dart';
+import 'package:michelin_road/application/stores/map.dart';
 import 'package:michelin_road/presentation/home/page.dart';
 import 'package:michelin_road/presentation/splash/page.dart';
 
@@ -20,8 +22,10 @@ class App extends Component {
   void onCreated(BuildContext context) {
     useStore(() => FirstLocationStore());
     useStore(() => CurrentLocationStore());
+    useStore(() => MapStore());
     useStore(() => LocatorStatusStore());
 
+    useEffect(() => FetchReviewsEffect(), until: SplashPage);
     useEffect(() => EnvironmentEffect(), until: SplashPage);
     useEffect(() => InfrastructureEffect(), until: SplashPage);
     useEffect(() => LocateEffect());

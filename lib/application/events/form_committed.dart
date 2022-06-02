@@ -1,3 +1,0 @@
-class FormCommitted {
-  const FormCommitted();
-}
