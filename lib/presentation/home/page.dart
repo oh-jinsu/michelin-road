@@ -87,6 +87,7 @@ class HomePage extends Component {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                     child: Container(
+                      alignment: Alignment.topCenter,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16.0),
@@ -100,53 +101,62 @@ class HomePage extends Component {
                       ),
                       child: Material(
                         color: Colors.transparent,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 8.0,
-                                left: 16.0,
-                                right: 2.0,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    data.value.model.restaurantName,
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.23,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 16.0,
+                                  bottom: 16.0,
+                                  left: 16.0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Wrap(
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                data.value.model.restaurantName
+                                                    .length;
+                                            i++)
+                                          Text(
+                                            data.value.model.restaurantName[i],
+                                            style: const TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold,
+                                              height: 1.23,
+                                            ),
+                                          ),
+                                        const SizedBox(width: 4.0),
+                                        for (int i = 0; i < 5; i++)
+                                          Icon(
+                                            Icons.star_rounded,
+                                            size: 20.0,
+                                            color: i < data.value.model.rating
+                                                ? Colors.amber
+                                                : Colors.grey[400],
+                                          ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(width: 4.0),
-                                  StarRating(
-                                    initial: data.value.model.rating,
-                                    enabled: false,
-                                    size: 20.0,
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: Colors.grey[400],
-                                    ),
-                                  )
-                                ],
+                                    if (data.value.model.description
+                                        .isNotEmpty) ...[
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        data.value.model.description,
+                                      ),
+                                    ]
+                                  ],
+                                ),
                               ),
                             ),
-                            if (data.value.model.description.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 16.0,
-                                  bottom: 16.0,
-                                ),
-                                child: Text(
-                                  data.value.model.description,
-                                ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.more_vert,
+                                color: Colors.grey[400],
                               ),
-                            const SizedBox(height: 8.0),
+                            )
                           ],
                         ),
                       ),
