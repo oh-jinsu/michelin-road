@@ -1,0 +1,3 @@
+class AppStarted {
+  const AppStarted();
+}
