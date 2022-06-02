@@ -58,6 +58,18 @@ class App extends Component {
 
         return null;
       },
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
+      },
+      theme: ThemeData(
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xff0080ff),
+          secondary: Color(0xff0080ff),
+        ),
+      ),
     );
   }
 }

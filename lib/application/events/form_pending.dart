@@ -1,0 +1,3 @@
+class FormPending {
+  const FormPending();
+}

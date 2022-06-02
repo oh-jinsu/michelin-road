@@ -35,7 +35,10 @@ class HomePage extends Component {
                       isScrollControlled: true,
                       context: context,
                       builder: (context) {
-                        return EditorModal();
+                        return EditorModal(
+                          latitude: data.value.latitude,
+                          longitude: data.value.longitude,
+                        );
                       },
                     );
                   },
