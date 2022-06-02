@@ -7,20 +7,22 @@ class HomeMap extends StatefulWidget {
   final LatLng? initial;
   final LatLng? current;
   final Iterable<Marker> markers;
+  final void Function(LatLng position)? onCurrentMoved;
 
-  const HomeMap({
-    Key? key,
-    required this.initial,
-    required this.current,
-    this.markers = const [],
-  }) : super(key: key);
+  const HomeMap(
+      {Key? key,
+      required this.initial,
+      required this.current,
+      this.markers = const [],
+      this.onCurrentMoved})
+      : super(key: key);
 
   @override
   State<HomeMap> createState() => _HomeMapState();
 }
 
 class _HomeMapState extends State<HomeMap> {
-  static const _zoom = 16.0;
+  double _zoom = 16.0;
 
   final _controller = Completer<GoogleMapController>();
 
@@ -28,7 +30,7 @@ class _HomeMapState extends State<HomeMap> {
     final target = widget.current;
 
     if (target == null) {
-      return {};
+      return {...widget.markers};
     }
 
     final marker = Marker(
@@ -36,9 +38,11 @@ class _HomeMapState extends State<HomeMap> {
       markerId: const MarkerId("current_location"),
       position: LatLng(target.latitude, target.longitude),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      onDragEnd: widget.onCurrentMoved,
+      zIndex: 99.9,
     );
 
-    return {marker};
+    return {...widget.markers, marker};
   }
 
   @override
@@ -83,7 +87,10 @@ class _HomeMapState extends State<HomeMap> {
       ),
       myLocationButtonEnabled: false,
       onMapCreated: (controller) => _controller.complete(controller),
-      markers: {...widget.markers, ...markers},
+      markers: markers,
+      onCameraMove: (position) {
+        _zoom = position.zoom;
+      },
     );
   }
 }

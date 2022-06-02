@@ -1,6 +1,7 @@
 import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:michelin_road/application/events/camera_moved.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/models/review.dart';
 import 'package:michelin_road/application/stores/first_location.dart';
@@ -15,38 +16,46 @@ class Viewer extends Component {
   @override
   Widget render(BuildContext context) {
     return StreamBuilder(
-      stream: find<CurrentLocationStore>().stream,
+      stream: find<MapStore>().stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final initialData = find<FirstLocationStore>().stream.value;
+          final reviews = snapshot.data as List<ReviewModel>;
 
-          final initial = initialData is Some<LocationModel>
-              ? LatLng(initialData.value.latitude, initialData.value.longitude)
-              : null;
-
-          final currentData = snapshot.data as Option<LocationModel>;
-
-          final current = currentData is Some<LocationModel>
-              ? LatLng(currentData.value.latitude, currentData.value.longitude)
-              : null;
+          final markers = reviews.map(
+            (e) => Marker(
+              markerId: MarkerId(e.id),
+              position: LatLng(e.latitude, e.longitude),
+            ),
+          );
 
           return StreamBuilder(
-            stream: find<MapStore>().stream,
+            stream: find<CurrentLocationStore>().stream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final reviews = snapshot.data as List<ReviewModel>;
+                final initialData = find<FirstLocationStore>().stream.value;
 
-                final markers = reviews.map(
-                  (e) => Marker(
-                    markerId: MarkerId(e.id),
-                    position: LatLng(e.latitude, e.longitude),
-                  ),
-                );
+                final initial = initialData is Some<LocationModel>
+                    ? LatLng(
+                        initialData.value.latitude, initialData.value.longitude)
+                    : null;
+
+                final currentData = snapshot.data as Option<LocationModel>;
+
+                final current = currentData is Some<LocationModel>
+                    ? LatLng(
+                        currentData.value.latitude, currentData.value.longitude)
+                    : null;
 
                 return HomeMap(
                   initial: initial,
                   current: current,
                   markers: markers,
+                  onCurrentMoved: (position) => dispatch(
+                    CameraMoved(
+                      latitude: position.latitude,
+                      longitude: position.longitude,
+                    ),
+                  ),
                 );
               }
               return Container();

@@ -16,7 +16,7 @@ class LocateEffect extends Effect {
       final recentOne = await locationRepository.findRecentOne();
 
       if (recentOne == null) {
-        return dispatch(const CurrentLocationFound(null));
+        return dispatch(const FirstLocationFound(null));
       }
 
       return dispatch(FirstLocationFound(recentOne));

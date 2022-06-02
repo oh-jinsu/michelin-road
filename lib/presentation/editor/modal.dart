@@ -7,7 +7,10 @@ import 'package:michelin_road/application/events/form_rating_changed.dart';
 import 'package:michelin_road/application/events/form_submitted.dart';
 import 'package:michelin_road/application/events/form_title_changed.dart';
 import 'package:michelin_road/application/models/form.dart';
+import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/stores/form.dart';
+import 'package:michelin_road/application/stores/form_location.dart';
+import 'package:michelin_road/core/enum.dart';
 import 'package:michelin_road/presentation/editor/widgets/star_rating.dart';
 
 class EditorModal extends Component {
@@ -82,6 +85,7 @@ class EditorModal extends Component {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                       child: TextField(
+                        enabled: !data.isSubmitPending,
                         autofocus: true,
                         style: const TextStyle(
                           fontSize: 24.0,
@@ -107,6 +111,7 @@ class EditorModal extends Component {
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0),
                       child: StarRating(
+                        enabled: !data.isSubmitPending,
                         onChanged: (v) => dispatch(FormRatingChanged(v)),
                       ),
                     ),
@@ -117,6 +122,7 @@ class EditorModal extends Component {
                         top: 16.0,
                       ),
                       child: TextField(
+                        enabled: !data.isSubmitPending,
                         minLines: 5,
                         maxLines: 5,
                         decoration: InputDecoration(
@@ -150,13 +156,17 @@ class EditorModal extends Component {
                             return;
                           }
 
+                          final location =
+                              find<AdjustedLocationStore>().stream.value;
+
                           dispatch(
                             FormSubmitted(
-                                latitude: latitude,
-                                longitude: longitude,
-                                restaurantName: data.title,
-                                description: data.description,
-                                rating: data.rating),
+                              latitude: location.latitude,
+                              longitude: location.longitude,
+                              restaurantName: data.title,
+                              description: data.description,
+                              rating: data.rating,
+                            ),
                           );
                         },
                         style: ElevatedButton.styleFrom(

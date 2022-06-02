@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class StarRating extends StatefulWidget {
+  final bool enabled;
   final void Function(int)? onChanged;
 
   const StarRating({
     Key? key,
+    this.enabled = true,
     this.onChanged,
   }) : super(key: key);
 
@@ -33,6 +35,10 @@ class _StarRatingState extends State<StarRating> {
   }
 
   void _onTap(int index) {
+    if (!widget.enabled) {
+      return;
+    }
+
     final rating = index + 1;
 
     setState(() {
