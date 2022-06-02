@@ -1,5 +1,6 @@
 import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
+import 'package:michelin_road/application/events/review_unselected.dart';
 import 'package:michelin_road/application/models/displaying_review.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/stores/current_location.dart';
@@ -44,6 +45,8 @@ class HomePage extends Component {
                     const SizedBox(height: 16.0),
                     FloatingActionButton(
                       onPressed: () {
+                        dispatch(const ReviewUnselected());
+
                         showModalBottomSheet(
                           isScrollControlled: true,
                           context: context,

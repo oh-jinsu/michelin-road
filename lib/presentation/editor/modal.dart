@@ -49,25 +49,50 @@ class EditorModal extends Component {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 4.0,
+                        top: 12.0,
                         left: 12.0,
                         right: 8.0,
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.add_location_alt,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          const SizedBox(width: 4.0),
-                          Text(
-                            "새로운 맛집별점",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                              height: 1.3,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.add_location_alt,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  Text(
+                                    "새로운 맛집별점",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 4.0,
+                                  top: 6.0,
+                                ),
+                                child: Text(
+                                  "파란색 마커가 찍힌 곳에 새로운 리뷰를 추가합니다.\n정확한 위치가 아니라면 드래그해서 옮겨 주세요!",
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                           const Spacer(),
                           IconButton(
@@ -81,7 +106,8 @@ class EditorModal extends Component {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 6.0),
                       child: TextField(
                         enabled: !data.isSubmitPending,
                         autofocus: true,
