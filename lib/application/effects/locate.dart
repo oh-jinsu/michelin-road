@@ -1,5 +1,6 @@
 import 'package:codux/codux.dart';
 import 'package:location/location.dart';
+import 'package:michelin_road/application/events/current_location_canceled.dart';
 import 'package:michelin_road/application/events/first_location_found.dart';
 import 'package:michelin_road/application/events/infrastructure_loaded.dart';
 import 'package:michelin_road/application/events/current_location_found.dart';
@@ -29,7 +30,7 @@ class LocateEffect extends Effect {
       try {
         location = await Location().getLocation();
       } catch (e) {
-        return;
+        return dispatch(const CurrentLocationCanceled());
       }
 
       final latitude = location.latitude;
@@ -37,7 +38,7 @@ class LocateEffect extends Effect {
       final longitude = location.longitude;
 
       if (latitude == null || longitude == null) {
-        return;
+        return dispatch(const CurrentLocationCanceled());
       }
 
       final locationRepository = ServiceLocator.find<LocationRepository>();

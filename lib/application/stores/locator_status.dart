@@ -17,9 +17,7 @@ class LocatorStatusStore extends Store<LocationStatusModel> {
       return const LocationStatusModel(isPending: true);
     });
     on<CurrentLocationCanceled>((current, event) {
-      return const LocationStatusModel(
-        isPending: false,
-      );
+      return const LocationStatusModel(isPending: false);
     });
   }
 }
