@@ -17,6 +17,7 @@ class Locator extends Component {
 
           if (!data.isPending) {
             return FloatingActionButton(
+              heroTag: "fab_location_request",
               onPressed: () => dispatch(const LocationRequested()),
               elevation: 4.0,
               backgroundColor: Colors.white,
@@ -29,6 +30,7 @@ class Locator extends Component {
         }
 
         return FloatingActionButton(
+          heroTag: "fab_location_request",
           onPressed: () {},
           elevation: 4.0,
           backgroundColor: Colors.white,

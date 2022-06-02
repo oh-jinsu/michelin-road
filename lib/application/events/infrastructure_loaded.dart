@@ -1,0 +1,3 @@
+class InfrastructureLoaded {
+  const InfrastructureLoaded();
+}

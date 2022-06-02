@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeMap extends StatefulWidget {
-  final CameraPosition cameraPosition;
+  final LatLng? target;
 
   const HomeMap({
     Key? key,
-    required this.cameraPosition,
+    required this.target,
   }) : super(key: key);
 
   @override
@@ -16,7 +16,27 @@ class HomeMap extends StatefulWidget {
 }
 
 class _HomeMapState extends State<HomeMap> {
+  static const _zoom = 17.0;
+
   final _controller = Completer<GoogleMapController>();
+
+  Set<Marker> get markers {
+    final target = widget.target;
+
+    if (target == null) {
+      return {};
+    }
+
+    final marker = Marker(
+      draggable: true,
+      markerId: const MarkerId("current_location"),
+      position: LatLng(target.latitude, target.longitude),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      infoWindow: const InfoWindow(title: "현위치"),
+    );
+
+    return {marker};
+  }
 
   @override
   void dispose() async {
@@ -34,35 +54,33 @@ class _HomeMapState extends State<HomeMap> {
     super.didUpdateWidget(oldWidget);
   }
 
-  _animate() async {
+  void _animate() async {
+    final target = widget.target;
+
+    if (target == null) {
+      return;
+    }
+
     final controller = await _controller.future;
 
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      widget.cameraPosition,
-    ));
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: target, zoom: _zoom),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
       mapType: MapType.normal,
-      initialCameraPosition: widget.cameraPosition,
+      initialCameraPosition: CameraPosition(
+        target: widget.target ?? const LatLng(37.583695, 127.001327),
+        zoom: _zoom,
+      ),
       myLocationButtonEnabled: false,
       onMapCreated: (controller) => _controller.complete(controller),
-      markers: {
-        Marker(
-          draggable: true,
-          markerId: const MarkerId("0"),
-          position: LatLng(
-            widget.cameraPosition.target.latitude,
-            widget.cameraPosition.target.longitude,
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueAzure,
-          ),
-          infoWindow: const InfoWindow(title: "현위치"),
-        )
-      },
+      markers: markers,
     );
   }
 }

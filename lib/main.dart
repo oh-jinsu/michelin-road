@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:codux/codux.dart';
+import 'package:michelin_road/application/effects/app_waiter.dart';
+import 'package:michelin_road/application/effects/environment.dart';
+import 'package:michelin_road/application/effects/infrastructure.dart';
 import 'package:michelin_road/application/effects/locate.dart';
 import 'package:michelin_road/application/events/app_started.dart';
 import 'package:michelin_road/application/stores/location.dart';
@@ -17,7 +20,10 @@ class App extends Component {
     useStore(() => LocationStore());
     useStore(() => LocationStatusStore());
 
+    useEffect(() => EnvironmentEffect(), until: SplashPage);
+    useEffect(() => InfrastructureEffect(), until: SplashPage);
     useEffect(() => LocateEffect());
+    useEffect(() => AppWaiterEffect(), until: SplashPage);
 
     super.onCreated(context);
   }
@@ -32,7 +38,6 @@ class App extends Component {
   @override
   Widget render(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Google Maps Demo',
       initialRoute: "/splash",
       onGenerateRoute: (settings) {
         if (settings.name == "/splash") {
