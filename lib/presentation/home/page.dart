@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/stores/current_location.dart';
 import 'package:michelin_road/core/enum.dart';
+import 'package:michelin_road/presentation/editor/modal.dart';
 import 'package:michelin_road/presentation/home/components/locator.dart';
 import 'package:michelin_road/presentation/home/components/viewer.dart';
 
@@ -12,6 +13,7 @@ class HomePage extends Component {
   @override
   Widget render(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: StreamBuilder(
         stream: find<CurrentLocationStore>().stream,
         builder: (context, snapshot) {
@@ -28,7 +30,15 @@ class HomePage extends Component {
                 const Locator(),
                 const SizedBox(height: 16.0),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) {
+                        return EditorModal();
+                      },
+                    );
+                  },
                   child: const Icon(
                     Icons.add_location_alt,
                     color: Color(0xff00366d),
