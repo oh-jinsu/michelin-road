@@ -1,5 +1,6 @@
 import 'package:codux/codux.dart';
 import 'package:michelin_road/application/events/review_added.dart';
+import 'package:michelin_road/application/events/review_deleted.dart';
 import 'package:michelin_road/application/events/reviews_found.dart';
 import 'package:michelin_road/application/models/review.dart';
 
@@ -14,6 +15,9 @@ class MapStore extends Store<List<ReviewModel>> {
       }
 
       return [event.model];
+    });
+    on<ReviewDeleted>((current, event) {
+      return current.state.where((element) => element.id != event.id).toList();
     });
   }
 }

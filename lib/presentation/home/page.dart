@@ -1,5 +1,7 @@
 import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
+import 'package:michelin_road/application/effects/delete_review.dart';
+import 'package:michelin_road/application/events/delete_review_requested.dart';
 import 'package:michelin_road/application/events/review_unselected.dart';
 import 'package:michelin_road/application/models/displaying_review.dart';
 import 'package:michelin_road/application/models/location.dart';
@@ -7,7 +9,6 @@ import 'package:michelin_road/application/stores/current_location.dart';
 import 'package:michelin_road/application/stores/selected_review.dart';
 import 'package:michelin_road/core/enum.dart';
 import 'package:michelin_road/presentation/editor/modal.dart';
-import 'package:michelin_road/presentation/editor/widgets/star_rating.dart';
 import 'package:michelin_road/presentation/home/components/locator.dart';
 import 'package:michelin_road/presentation/home/components/viewer.dart';
 
@@ -17,6 +18,8 @@ class HomePage extends Component {
   @override
   void onCreated(BuildContext context) {
     useStore(() => SelectedReviewStore());
+
+    useEffect(() => DeleteReviewEffect());
 
     super.onCreated(context);
   }
@@ -81,7 +84,7 @@ class HomePage extends Component {
               if (data is Some<DisplayingReviewModel>) {
                 return AnimatedPositioned(
                   width: MediaQuery.of(context).size.width,
-                  bottom: data.value.show ? 48.0 : -100.0,
+                  bottom: data.value.show ? 48.0 : -256.0,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.ease,
                   child: Padding(
@@ -150,12 +153,59 @@ class HomePage extends Component {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
+                            PopupMenuButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                               icon: Icon(
                                 Icons.more_vert,
                                 color: Colors.grey[400],
                               ),
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          color: Colors.grey[600],
+                                        ),
+                                        const SizedBox(width: 4.0),
+                                        Text(
+                                          "수정",
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () {
+                                      dispatch(
+                                        DeleteReviewRequested(
+                                          data.value.model.id,
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.delete,
+                                          color: Colors.grey[600],
+                                        ),
+                                        const SizedBox(width: 4.0),
+                                        Text(
+                                          "삭제",
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ];
+                              },
                             )
                           ],
                         ),
@@ -167,7 +217,7 @@ class HomePage extends Component {
 
               return AnimatedPositioned(
                 width: MediaQuery.of(context).size.width,
-                bottom: -100.0,
+                bottom: -256.0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.ease,
                 child: Padding(
