@@ -1,0 +1,3 @@
+class CurrentLocationRequested {
+  const CurrentLocationRequested();
+}

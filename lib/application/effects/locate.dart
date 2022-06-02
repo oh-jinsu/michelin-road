@@ -1,9 +1,10 @@
 import 'package:codux/codux.dart';
 import 'package:location/location.dart';
+import 'package:michelin_road/application/events/first_location_found.dart';
 import 'package:michelin_road/application/events/infrastructure_loaded.dart';
-import 'package:michelin_road/application/events/location_found.dart';
-import 'package:michelin_road/application/events/location_pending.dart';
-import 'package:michelin_road/application/events/location_requested.dart';
+import 'package:michelin_road/application/events/current_location_found.dart';
+import 'package:michelin_road/application/events/current_location_pending.dart';
+import 'package:michelin_road/application/events/current_location_requested.dart';
 import 'package:michelin_road/core/service_locator.dart';
 import 'package:michelin_road/infrastructure/repositories/location.dart';
 
@@ -15,13 +16,13 @@ class LocateEffect extends Effect {
       final recentOne = await locationRepository.findRecentOne();
 
       if (recentOne == null) {
-        return dispatch(const LocationFound(null));
+        return dispatch(const CurrentLocationFound(null));
       }
 
-      return dispatch(LocationFound(recentOne));
+      return dispatch(FirstLocationFound(recentOne));
     });
-    on<LocationRequested>((event) async {
-      dispatch(const LocationPending());
+    on<CurrentLocationRequested>((event) async {
+      dispatch(const CurrentLocationPending());
 
       final LocationData location;
 
@@ -46,7 +47,7 @@ class LocateEffect extends Effect {
         longitude: longitude,
       );
 
-      dispatch(LocationFound(locationModel));
+      dispatch(CurrentLocationFound(locationModel));
     });
   }
 }

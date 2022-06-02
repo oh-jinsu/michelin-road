@@ -1,0 +1,3 @@
+class CurrentLocationCanceled {
+  const CurrentLocationCanceled();
+}

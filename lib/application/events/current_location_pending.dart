@@ -1,0 +1,3 @@
+class CurrentLocationPending {
+  const CurrentLocationPending();
+}

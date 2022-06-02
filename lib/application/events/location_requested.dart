@@ -1,3 +1,0 @@
-class LocationRequested {
-  const LocationRequested();
-}

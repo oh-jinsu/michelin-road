@@ -1,7 +1,7 @@
 import 'package:michelin_road/application/models/location.dart';
 
-class LocationFound {
+class CurrentLocationFound {
   final LocationModel? model;
 
-  const LocationFound(this.model);
+  const CurrentLocationFound(this.model);
 }

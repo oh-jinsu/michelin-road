@@ -1,8 +1,8 @@
 import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
-import 'package:michelin_road/application/events/location_requested.dart';
+import 'package:michelin_road/application/events/current_location_requested.dart';
 import 'package:michelin_road/application/models/location_status.dart';
-import 'package:michelin_road/application/stores/location_status.dart';
+import 'package:michelin_road/application/stores/locator_status.dart';
 
 class Locator extends Component {
   const Locator({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class Locator extends Component {
   @override
   Widget render(BuildContext context) {
     return StreamBuilder(
-      stream: find<LocationStatusStore>().stream,
+      stream: find<LocatorStatusStore>().stream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data as LocationStatusModel;
@@ -18,7 +18,7 @@ class Locator extends Component {
           if (!data.isPending) {
             return FloatingActionButton(
               heroTag: "fab_location_request",
-              onPressed: () => dispatch(const LocationRequested()),
+              onPressed: () => dispatch(const CurrentLocationRequested()),
               elevation: 4.0,
               backgroundColor: Colors.white,
               child: Icon(
@@ -39,7 +39,7 @@ class Locator extends Component {
             height: 20.0,
             child: Center(
               child: CircularProgressIndicator(
-                strokeWidth: 4.0,
+                strokeWidth: 2.0,
                 color: Colors.grey[700],
               ),
             ),

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeMap extends StatefulWidget {
-  final LatLng? target;
+  final LatLng? initial;
+  final LatLng? current;
 
   const HomeMap({
     Key? key,
-    required this.target,
+    required this.initial,
+    required this.current,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class _HomeMapState extends State<HomeMap> {
   final _controller = Completer<GoogleMapController>();
 
   Set<Marker> get markers {
-    final target = widget.target;
+    final target = widget.current;
 
     if (target == null) {
       return {};
@@ -32,7 +34,6 @@ class _HomeMapState extends State<HomeMap> {
       markerId: const MarkerId("current_location"),
       position: LatLng(target.latitude, target.longitude),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      infoWindow: const InfoWindow(title: "현위치"),
     );
 
     return {marker};
@@ -55,7 +56,7 @@ class _HomeMapState extends State<HomeMap> {
   }
 
   void _animate() async {
-    final target = widget.target;
+    final target = widget.current;
 
     if (target == null) {
       return;
@@ -75,7 +76,7 @@ class _HomeMapState extends State<HomeMap> {
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: CameraPosition(
-        target: widget.target ?? const LatLng(37.583695, 127.001327),
+        target: widget.initial ?? const LatLng(37.583695, 127.001327),
         zoom: _zoom,
       ),
       myLocationButtonEnabled: false,

@@ -5,8 +5,9 @@ import 'package:michelin_road/application/effects/environment.dart';
 import 'package:michelin_road/application/effects/infrastructure.dart';
 import 'package:michelin_road/application/effects/locate.dart';
 import 'package:michelin_road/application/events/app_started.dart';
-import 'package:michelin_road/application/stores/location.dart';
-import 'package:michelin_road/application/stores/location_status.dart';
+import 'package:michelin_road/application/stores/first_location.dart';
+import 'package:michelin_road/application/stores/current_location.dart';
+import 'package:michelin_road/application/stores/locator_status.dart';
 import 'package:michelin_road/presentation/home/page.dart';
 import 'package:michelin_road/presentation/splash/page.dart';
 
@@ -17,8 +18,9 @@ class App extends Component {
 
   @override
   void onCreated(BuildContext context) {
-    useStore(() => LocationStore());
-    useStore(() => LocationStatusStore());
+    useStore(() => FirstLocationStore());
+    useStore(() => CurrentLocationStore());
+    useStore(() => LocatorStatusStore());
 
     useEffect(() => EnvironmentEffect(), until: SplashPage);
     useEffect(() => InfrastructureEffect(), until: SplashPage);
