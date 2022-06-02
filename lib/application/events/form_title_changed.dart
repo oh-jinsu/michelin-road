@@ -1,5 +1,5 @@
-class FormTitleChanged {
+class FormRestaurantNameChanged {
   final String value;
 
-  const FormTitleChanged(this.value);
+  const FormRestaurantNameChanged(this.value);
 }

@@ -1,11 +1,14 @@
 import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
 import 'package:michelin_road/application/effects/delete_review.dart';
+import 'package:michelin_road/application/effects/show_editor.dart';
 import 'package:michelin_road/application/events/delete_review_requested.dart';
 import 'package:michelin_road/application/events/review_unselected.dart';
+import 'package:michelin_road/application/events/edit_review_requested.dart';
 import 'package:michelin_road/application/models/displaying_review.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/stores/current_location.dart';
+import 'package:michelin_road/application/stores/form_location.dart';
 import 'package:michelin_road/application/stores/selected_review.dart';
 import 'package:michelin_road/core/enum.dart';
 import 'package:michelin_road/presentation/editor/modal.dart';
@@ -19,6 +22,7 @@ class HomePage extends Component {
   void onCreated(BuildContext context) {
     useStore(() => SelectedReviewStore());
 
+    useEffect(() => ShowEditor());
     useEffect(() => DeleteReviewEffect());
 
     super.onCreated(context);
@@ -50,13 +54,16 @@ class HomePage extends Component {
                       onPressed: () {
                         dispatch(const ReviewUnselected());
 
+                        final location =
+                            find<AdjustedLocationStore>().stream.value;
+
                         showModalBottomSheet(
                           isScrollControlled: true,
                           context: context,
                           builder: (context) {
                             return EditorModal(
-                              latitude: data.value.latitude,
-                              longitude: data.value.longitude,
+                              latitude: location.latitude,
+                              longitude: location.longitude,
                             );
                           },
                         );
@@ -164,6 +171,18 @@ class HomePage extends Component {
                               itemBuilder: (context) {
                                 return [
                                   PopupMenuItem(
+                                    onTap: () {
+                                      dispatch(EditReviewRequested(
+                                        id: data.value.model.id,
+                                        restaurantName:
+                                            data.value.model.restaurantName,
+                                        rating: data.value.model.rating,
+                                        description:
+                                            data.value.model.description,
+                                        latitude: data.value.model.latitude,
+                                        longitude: data.value.model.longitude,
+                                      ));
+                                    },
                                     child: Row(
                                       children: [
                                         Icon(

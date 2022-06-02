@@ -4,14 +4,14 @@ class StarRating extends StatefulWidget {
   final bool enabled;
   final void Function(int)? onChanged;
   final double size;
-  final int initial;
+  final int? initial;
 
   const StarRating({
     Key? key,
     this.enabled = true,
     this.onChanged,
     this.size = 36.0,
-    this.initial = 5,
+    this.initial,
   }) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class StarRating extends StatefulWidget {
 }
 
 class _StarRatingState extends State<StarRating> {
-  late int _rating = widget.initial;
+  late int _rating = widget.initial ?? 5;
 
   @override
   Widget build(BuildContext context) {

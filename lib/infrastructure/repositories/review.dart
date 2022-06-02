@@ -59,8 +59,6 @@ class ReviewRepository {
     int? rating,
     String? description,
   }) async {
-    final id = uuid.v1();
-
     final value = <String, dynamic>{
       "updated_at": DateTime.now().toIso8601String(),
     };

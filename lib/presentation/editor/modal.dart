@@ -8,15 +8,29 @@ import 'package:michelin_road/application/events/form_submitted.dart';
 import 'package:michelin_road/application/events/form_title_changed.dart';
 import 'package:michelin_road/application/models/form.dart';
 import 'package:michelin_road/application/stores/form.dart';
-import 'package:michelin_road/application/stores/form_location.dart';
 import 'package:michelin_road/presentation/editor/widgets/star_rating.dart';
 
 class EditorModal extends Component {
+  late final restaurantNameController = TextEditingController(
+    text: restaurantName,
+  );
+  late final descriptionController = TextEditingController(
+    text: description,
+  );
+
+  final String? id;
+  final String? restaurantName;
+  final int? rating;
+  final String? description;
   final double latitude;
   final double longitude;
 
-  const EditorModal({
+  EditorModal({
     Key? key,
+    this.id,
+    this.restaurantName,
+    this.rating,
+    this.description,
     required this.latitude,
     required this.longitude,
   }) : super(key: key);
@@ -29,6 +43,32 @@ class EditorModal extends Component {
     useEffect(() => FormWaiterEffect());
 
     super.onCreated(context);
+  }
+
+  @override
+  void onStarted(BuildContext context) {
+    if (restaurantName != null) {
+      dispatch(FormRestaurantNameChanged(restaurantName!));
+    }
+
+    if (rating != null) {
+      dispatch(FormRatingChanged(rating!));
+    }
+
+    if (description != null) {
+      dispatch(FormDescriptionChanged(description!));
+    }
+
+    super.onStarted(context);
+  }
+
+  @override
+  void onDestroyed(BuildContext context) {
+    restaurantNameController.dispose();
+
+    descriptionController.dispose();
+
+    super.onDestroyed(context);
   }
 
   @override
@@ -54,7 +94,6 @@ class EditorModal extends Component {
                         right: 8.0,
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,13 +101,15 @@ class EditorModal extends Component {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.add_location_alt,
+                                    id != null
+                                        ? Icons.edit_location_alt
+                                        : Icons.add_location_alt,
                                     color:
                                         Theme.of(context).colorScheme.primary,
                                   ),
                                   const SizedBox(width: 4.0),
                                   Text(
-                                    "새로운 맛집별점",
+                                    id != null ? "맛집별점 수정" : "새로운 맛집별점",
                                     style: TextStyle(
                                       fontSize: 18.0,
                                       color:
@@ -79,19 +120,21 @@ class EditorModal extends Component {
                                   ),
                                 ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4.0,
-                                  top: 6.0,
-                                ),
-                                child: Text(
-                                  "파란색 마커가 찍힌 곳에 새로운 리뷰를 추가합니다.\n정확한 위치가 아니라면 드래그해서 옮겨 주세요!",
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 12.0,
+                              if (id == null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 4.0,
+                                    top: 8.0,
+                                    bottom: 4.0,
                                   ),
-                                ),
-                              )
+                                  child: Text(
+                                    "지도 위 파란색 마커가 찍힌 곳에 리뷰를 추가합니다.\n위치가 정확하지 않다면 드래그해서 옮겨 주세요!",
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                )
                             ],
                           ),
                           const Spacer(),
@@ -106,11 +149,10 @@ class EditorModal extends Component {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 6.0),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                       child: TextField(
+                        controller: restaurantNameController,
                         enabled: !data.isSubmitPending,
-                        autofocus: true,
                         style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
@@ -129,12 +171,14 @@ class EditorModal extends Component {
                             gapPadding: 0.0,
                           ),
                         ),
-                        onChanged: (v) => dispatch(FormTitleChanged(v)),
+                        onChanged: (v) =>
+                            dispatch(FormRestaurantNameChanged(v)),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0),
                       child: StarRating(
+                        initial: rating,
                         enabled: !data.isSubmitPending,
                         onChanged: (v) => dispatch(FormRatingChanged(v)),
                       ),
@@ -146,6 +190,7 @@ class EditorModal extends Component {
                         top: 16.0,
                       ),
                       child: TextField(
+                        controller: descriptionController,
                         enabled: !data.isSubmitPending,
                         minLines: 5,
                         maxLines: 5,
@@ -180,13 +225,11 @@ class EditorModal extends Component {
                             return;
                           }
 
-                          final location =
-                              find<AdjustedLocationStore>().stream.value;
-
                           dispatch(
                             FormSubmitted(
-                              latitude: location.latitude,
-                              longitude: location.longitude,
+                              id: id,
+                              latitude: latitude,
+                              longitude: longitude,
                               restaurantName: data.title,
                               description: data.description,
                               rating: data.rating,
@@ -209,7 +252,7 @@ class EditorModal extends Component {
                                   ),
                                 ),
                               )
-                            : const Text("추가하기"),
+                            : Text(id != null ? "수정하기" : "추가하기"),
                       ),
                     ),
                     const SizedBox(height: 8.0),

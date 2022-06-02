@@ -16,7 +16,7 @@ const initialState = FormModel(
 
 class FormStore extends Store<FormModel> {
   FormStore() : super(initialState: initialState) {
-    on<FormTitleChanged>((current, event) {
+    on<FormRestaurantNameChanged>((current, event) {
       if (event.value.isEmpty) {
         return current.state.copy(
           title: New(event.value),
