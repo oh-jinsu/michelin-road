@@ -49,6 +49,20 @@ class _HomeMapState extends State<HomeMap> {
       initialCameraPosition: widget.cameraPosition,
       myLocationButtonEnabled: false,
       onMapCreated: (controller) => _controller.complete(controller),
+      markers: {
+        Marker(
+          draggable: true,
+          markerId: const MarkerId("0"),
+          position: LatLng(
+            widget.cameraPosition.target.latitude,
+            widget.cameraPosition.target.longitude,
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueAzure,
+          ),
+          infoWindow: const InfoWindow(title: "현위치"),
+        )
+      },
     );
   }
 }
