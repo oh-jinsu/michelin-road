@@ -11,13 +11,6 @@ import 'package:michelin_road/application/stores/form.dart';
 import 'package:michelin_road/presentation/editor/widgets/star_rating.dart';
 
 class EditorModal extends Component {
-  late final restaurantNameController = TextEditingController(
-    text: restaurantName,
-  );
-  late final descriptionController = TextEditingController(
-    text: description,
-  );
-
   final String? id;
   final String? restaurantName;
   final int? rating;
@@ -25,7 +18,7 @@ class EditorModal extends Component {
   final double latitude;
   final double longitude;
 
-  EditorModal({
+  const EditorModal({
     Key? key,
     this.id,
     this.restaurantName,
@@ -43,10 +36,7 @@ class EditorModal extends Component {
     useEffect(() => FormWaiterEffect());
 
     super.onCreated(context);
-  }
 
-  @override
-  void onStarted(BuildContext context) {
     if (restaurantName != null) {
       dispatch(FormRestaurantNameChanged(restaurantName!));
     }
@@ -58,17 +48,6 @@ class EditorModal extends Component {
     if (description != null) {
       dispatch(FormDescriptionChanged(description!));
     }
-
-    super.onStarted(context);
-  }
-
-  @override
-  void onDestroyed(BuildContext context) {
-    restaurantNameController.dispose();
-
-    descriptionController.dispose();
-
-    super.onDestroyed(context);
   }
 
   @override
@@ -150,9 +129,10 @@ class EditorModal extends Component {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                      child: TextField(
-                        controller: restaurantNameController,
+                      child: TextFormField(
+                        initialValue: restaurantName,
                         enabled: !data.isSubmitPending,
+                        autofocus: id == null,
                         style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
@@ -160,7 +140,7 @@ class EditorModal extends Component {
                         decoration: InputDecoration(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 2.0),
-                          hintText: "맛집 이름",
+                          hintText: "맛집 이름을 입력해 주세요.",
                           hintStyle: const TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
@@ -189,8 +169,8 @@ class EditorModal extends Component {
                         right: 16.0,
                         top: 16.0,
                       ),
-                      child: TextField(
-                        controller: descriptionController,
+                      child: TextFormField(
+                        initialValue: description,
                         enabled: !data.isSubmitPending,
                         minLines: 5,
                         maxLines: 5,

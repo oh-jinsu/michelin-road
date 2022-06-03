@@ -78,6 +78,7 @@ class App extends Component {
           secondary: Color(0xff0080ff),
         ),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
