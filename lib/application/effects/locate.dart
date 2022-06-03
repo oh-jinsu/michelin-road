@@ -1,5 +1,7 @@
 import 'package:codux/codux.dart';
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:michelin_road/application/effects/with_dialog.dart';
 import 'package:michelin_road/application/events/current_location_canceled.dart';
 import 'package:michelin_road/application/events/first_location_found.dart';
 import 'package:michelin_road/application/events/infrastructure_loaded.dart';
@@ -9,7 +11,7 @@ import 'package:michelin_road/application/events/current_location_requested.dart
 import 'package:michelin_road/core/service_locator.dart';
 import 'package:michelin_road/infrastructure/repositories/location.dart';
 
-class LocateEffect extends Effect {
+class LocateEffect extends Effect with DialogEffectMixin {
   LocateEffect() {
     on<InfrastructureLoaded>((event) async {
       final locationRepository = ServiceLocator.find<LocationRepository>();
@@ -33,7 +35,13 @@ class LocateEffect extends Effect {
         final result = await service.requestService();
 
         if (!result) {
-          return dispatch(const CurrentLocationCanceled());
+          dispatch(const CurrentLocationCanceled());
+
+          // showAlertDialog(
+          //   content: "위치 서비스가 꺼져 있습니다. 현위치를 표시하려면 기기 설정에서 위치 서비스를 켜 주세요.",
+          // );
+
+          return;
         }
       }
 
@@ -43,7 +51,13 @@ class LocateEffect extends Effect {
         final result = await service.requestPermission();
 
         if (result != PermissionStatus.granted) {
-          return dispatch(const CurrentLocationCanceled());
+          dispatch(const CurrentLocationCanceled());
+
+          showAlertDialog(
+            content: "위치 서비스에 접근할 권한이 없습니다. 현위치를 표시하려면 기기 설정에서 접근을 허용해 주세요.",
+          );
+
+          return;
         }
       }
 
