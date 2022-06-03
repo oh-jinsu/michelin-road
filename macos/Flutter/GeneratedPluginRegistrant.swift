@@ -5,10 +5,10 @@
 import FlutterMacOS
 import Foundation
 
-import location
+import geolocator_apple
 import sqflite
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  LocationPlugin.register(with: registry.registrar(forPlugin: "LocationPlugin"))
+  GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
 }
