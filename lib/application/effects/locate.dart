@@ -50,7 +50,7 @@ class LocateEffect extends Effect {
       final LocationData data;
 
       try {
-        data = await Location().getLocation();
+        data = await service.getLocation();
       } catch (e) {
         return dispatch(const CurrentLocationCanceled());
       }
