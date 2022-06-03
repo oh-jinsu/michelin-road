@@ -37,9 +37,9 @@ class LocateEffect extends Effect with DialogEffectMixin {
         if (!result) {
           dispatch(const CurrentLocationCanceled());
 
-          // showAlertDialog(
-          //   content: "위치 서비스가 꺼져 있습니다. 현위치를 표시하려면 기기 설정에서 위치 서비스를 켜 주세요.",
-          // );
+          showAlertDialog(
+            content: "위치 서비스가 꺼져 있습니다. 현위치를 표시하려면 기기 설정에서 위치 서비스를 켜 주세요.",
+          );
 
           return;
         }
