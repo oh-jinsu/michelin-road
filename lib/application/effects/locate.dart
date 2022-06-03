@@ -25,17 +25,39 @@ class LocateEffect extends Effect {
     on<CurrentLocationRequested>((event) async {
       dispatch(const CurrentLocationPending());
 
-      final LocationData location;
+      final service = Location();
+
+      final isServiceAvailable = await service.serviceEnabled();
+
+      if (!isServiceAvailable) {
+        final result = await service.requestService();
+
+        if (!result) {
+          return dispatch(const CurrentLocationCanceled());
+        }
+      }
+
+      final isPermissionGranted = await service.hasPermission();
+
+      if (isPermissionGranted == PermissionStatus.denied) {
+        final result = await service.requestPermission();
+
+        if (result != PermissionStatus.granted) {
+          return dispatch(const CurrentLocationCanceled());
+        }
+      }
+
+      final LocationData data;
 
       try {
-        location = await Location().getLocation();
+        data = await Location().getLocation();
       } catch (e) {
         return dispatch(const CurrentLocationCanceled());
       }
 
-      final latitude = location.latitude;
+      final latitude = data.latitude;
 
-      final longitude = location.longitude;
+      final longitude = data.longitude;
 
       if (latitude == null || longitude == null) {
         return dispatch(const CurrentLocationCanceled());
