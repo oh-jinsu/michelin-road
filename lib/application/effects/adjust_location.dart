@@ -9,6 +9,7 @@ class AdjustLocationEffect extends Effect {
     on<CameraMoved>((event) {
       final model = LocationModel(
         id: uuid.v1(),
+        title: null,
         latitude: event.latitude,
         longitude: event.longitude,
         createdAt: DateTime.now(),

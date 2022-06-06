@@ -60,7 +60,7 @@ class App extends Component {
 
         if (settings.name == "/home") {
           return MaterialPageRoute(
-            builder: (context) => const HomePage(),
+            builder: (context) => HomePage(),
           );
         }
 

@@ -7,6 +7,8 @@ import 'package:michelin_road/application/events/infrastructure_loaded.dart';
 import 'package:michelin_road/application/events/current_location_found.dart';
 import 'package:michelin_road/application/events/current_location_pending.dart';
 import 'package:michelin_road/application/events/current_location_requested.dart';
+import 'package:michelin_road/application/events/searched_location_found.dart';
+import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/core/service_locator.dart';
 import 'package:michelin_road/infrastructure/repositories/location.dart';
 
@@ -77,6 +79,17 @@ class LocateEffect extends Effect with DialogEffectMixin {
       );
 
       dispatch(CurrentLocationFound(locationModel));
+    });
+    on<SearchedLocationFound>((event) {
+      final location = LocationModel(
+        id: "${event.latitude}-${event.longitude}",
+        title: event.title,
+        latitude: event.latitude,
+        longitude: event.longitude,
+        createdAt: DateTime.now(),
+      );
+
+      dispatch(CurrentLocationFound(location));
     });
   }
 }

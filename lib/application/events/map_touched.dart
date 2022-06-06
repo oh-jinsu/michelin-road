@@ -1,0 +1,3 @@
+class MapTouched {
+  const MapTouched();
+}

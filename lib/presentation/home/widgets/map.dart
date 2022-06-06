@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:michelin_road/application/models/location.dart';
 
 class HomeMap extends StatefulWidget {
   final LatLng? initial;
-  final LatLng? current;
+  final LocationModel? current;
   final Iterable<Marker> markers;
   final void Function(LatLng position)? onTap;
   final void Function(LatLng position)? onCurrentMoved;
@@ -42,6 +43,9 @@ class _HomeMapState extends State<HomeMap> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       onDragEnd: widget.onCurrentMoved,
       zIndex: 99.9,
+      infoWindow: target.title != null
+          ? InfoWindow(title: target.title)
+          : InfoWindow.noText,
     );
 
     return {...widget.markers, marker};
@@ -74,7 +78,8 @@ class _HomeMapState extends State<HomeMap> {
 
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: target, zoom: _zoom),
+        CameraPosition(
+            target: LatLng(target.latitude, target.longitude), zoom: _zoom),
       ),
     );
   }

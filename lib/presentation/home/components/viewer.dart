@@ -2,8 +2,8 @@ import 'package:codux/codux.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:michelin_road/application/events/camera_moved.dart';
+import 'package:michelin_road/application/events/map_touched.dart';
 import 'package:michelin_road/application/events/review_selected.dart';
-import 'package:michelin_road/application/events/review_unselected.dart';
 import 'package:michelin_road/application/models/location.dart';
 import 'package:michelin_road/application/models/review.dart';
 import 'package:michelin_road/application/stores/first_location.dart';
@@ -13,7 +13,12 @@ import 'package:michelin_road/core/enum.dart';
 import 'package:michelin_road/presentation/home/widgets/map.dart';
 
 class Viewer extends Component {
-  const Viewer({Key? key}) : super(key: key);
+  final void Function()? onTap;
+
+  const Viewer({
+    Key? key,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget render(BuildContext context) {
@@ -45,8 +50,7 @@ class Viewer extends Component {
                 final currentData = snapshot.data as Option<LocationModel>;
 
                 final current = currentData is Some<LocationModel>
-                    ? LatLng(
-                        currentData.value.latitude, currentData.value.longitude)
+                    ? currentData.value
                     : null;
 
                 return HomeMap(
@@ -59,9 +63,14 @@ class Viewer extends Component {
                       longitude: position.longitude,
                     ),
                   ),
-                  onTap: (position) => dispatch(const ReviewUnselected()),
+                  onTap: (position) {
+                    onTap?.call();
+
+                    dispatch(const MapTouched());
+                  },
                 );
               }
+
               return Container();
             },
           );
